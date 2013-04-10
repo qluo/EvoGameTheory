@@ -4,8 +4,8 @@
 
 #ifndef SIMPLE_READER_H
 #define SIMPLE_READER_H
-#include "Utils.h"
-
+#include "MyUtils.h"
+#include <fstream>
 
 namespace Dmrg {
 	class SimpleReader {
@@ -38,7 +38,7 @@ namespace Dmrg {
 				fin_>>v[i];
 			}
 		}
-
+		/*
 		template<typename FieldType>
 		void read(psimag::Matrix<FieldType>& v) 
 		{
@@ -53,7 +53,7 @@ namespace Dmrg {
 				for (size_t j=0;j<v.n_col();j++) 
 					fin_>>v(i,j);
 		}
-
+		*/
 		template<typename FieldType>
 		void read(FieldType& x)  { readALabel(); fin_>>x; }
 

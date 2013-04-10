@@ -32,7 +32,7 @@ unsigned long RandomBase::GetDimensionality() const
 {
 	return Dimensionality;
 }
-
+/*
 void RandomBase::GetGaussians(std::vector<double>& variates)
 {
 	GetUniforms(variates);
@@ -52,5 +52,5 @@ RandomBase::RandomBase(unsigned long Dimensionality_)
 : Dimensionality(Dimensionality_)
 {
 }
-
+*/
 #endif

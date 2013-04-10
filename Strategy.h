@@ -8,6 +8,7 @@
 #define STRATEGY_H
 #include <vector>
 #include <bitset>
+#include <iostream>
 #include "Constants.h"
 
 namespace EGT{
@@ -16,14 +17,14 @@ namespace EGT{
 
     std::bitset<SIZE> singleStrategy;
     unsigned long score;
-    long seed;
+    //    long seed;
     
   public:
 
-    Strategy(long randomSeed = 0);
+    Strategy(unsigned long score_ = 0);
 
-    void InitializePool();
-    bool GetThisStrategyResult(const long& signal) const;
+    void Initialize(const long& randomSeed);
+    bool GetThisStrategyResult(const unsigned long& signal) const;
     void UpdateScore();
     unsigned long GetScore() const;
 

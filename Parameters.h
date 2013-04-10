@@ -9,7 +9,6 @@
 
 #include "MyUtils.h"
 #include "SimpleReader.h"
-//#include "Constants.h"
 
 namespace EGT{
 	
@@ -25,28 +24,10 @@ namespace EGT{
   };
 
   //! Read parameters from input file
-  Parameters& operator <= (Parameters& parameters,  Dmrg::SimpleReader& reader) 
-    {
-      reader.read(parameters.outputFile);
-      reader.read(parameters.nPlayer); 
-      reader.read(parameters.stepMAX);
-      reader.read(parameters.initSignal);
-      reader.read(parameters.randomSeed);
+  Parameters& operator <= (Parameters& parameters,  Dmrg::SimpleReader& reader);
 
-      return parameters;
-    } 
-
-	//! print parameters
-  std::ostream &operator << (std::ostream &os, const Parameters &parameters)
-    {
-      os<<"parameters.filename="<<parameters.outputFile<<"\n";
-      os<<"parameters.nPlayer="<<parameters.nPlayer<<"\n";
-      os<<"parameters.stepMAX="<<parameters.stepMAX<<"\n";
-      os<<"parameters.initSingal="<<parameters.initSignal<<"\n";
-      os<<"parameters.seed="<<parameters.randomSeed;
-
-      return os;
-    }
+  //! print parameters
+  std::ostream& operator << (std::ostream &os, const Parameters &parameters);
 
 } // namespace EGT
 

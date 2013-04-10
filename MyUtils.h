@@ -5,6 +5,8 @@
 //! Utility functions
 #include <vector>
 #include <iostream>
+#include <fstream>
+//#include <bitset>
 #include <sys/time.h>
 #include <sys/resource.h>
 
@@ -45,10 +47,6 @@ namespace myUtils {
   }  
   */
 
-  void Bin2Dec(long& n, std::bitset<M> b)
-  {
-    n=long(b.to_ulong());
-  }
 
 } // namespace myUtils
 

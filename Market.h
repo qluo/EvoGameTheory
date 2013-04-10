@@ -21,16 +21,20 @@ namespace EGT {
     
     std::string signalStart;
     std::bitset<M> signal;
-    std::pair<long,long> historyResult;
+    bool currentResult;
+    std::pair<unsigned long, unsigned long> historyResult;
     
-  public:
-    Market();
-      
-    void UpdateSignal();
-    void InitSignal();
-    void SetSignal();
-    long GetSignal() const;
+    //void Bin2Dec(const std::bitset<M>& b, long& n);
 
+  public:
+    Market(const std::string& signalStart_);
+
+    void UpdateSignal(bool getResult);
+    void ResetSignal();
+    unsigned long GetSignal() const;
+    
   }; // Market
 
 } //namespace EGT
+
+#endif

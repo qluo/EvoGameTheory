@@ -1,22 +1,40 @@
 #ifndef STATS_GATHERER_EGT_H
 #define STATS_GATHERER_EGT_H
 
+#include <utility>
+#include <vector>
+
 namespace EGT {
 
-  class StatsGathererEGT :
+  class StatsGathererEGT
   {
   public:
+
+    typedef std::pair<unsigned long, unsigned long> PairType;
+    typedef std::vector< PairType > GathererType;
+
     StatsGathererEGT();
-    void DumpOneResult(unsigned result);
-    std::vector< std::vector<unsigned> > GetResultsSoFar() const;
-    bool Publish() const;
+    void DumpOneResult(bool result);
+    void UpdateResults();
+    GathererType GetResultsSoFar() const;
+    bool Publish();
+    inline unsigned long GetNumPlayerDone() const;
+
     StatsGathererEGT* clone() const;
 
   private:
-    unsigned sumOfOne;
-    unsigned long PlayerDone;
+
+    PairType sums; //first -- A; second -- B
+    unsigned long stepDone;
+    GathererType hisResults;
 
   }; //StatsGathererEGT
 
+  unsigned long StatsGathererEGT::GetNumPlayerDone() const
+  {
+    return (sums.first+sums.second);
+  }
+
 }
+
 #endif

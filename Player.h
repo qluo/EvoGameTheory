@@ -7,8 +7,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-//#include <vector>
-//#include <bitset>
+#include <vector>
+#include <iostream>
 #include "Constants.h"
 #include "Strategy.h"
 
@@ -16,21 +16,24 @@ namespace EGT {
 
   class Player {
 
-    typedef EGT::Strategy StrategyType;
-    // std::vector< std::bitset<SIZE> > strategy;
-    StrategyType strategy;
-    long numStrategy;
+    typedef typename EGT::Strategy StrategyType;
+    std::vector<StrategyType> strategies;
+
     bool prediction; // 1--A wins; 0--B wins
     unsigned selectedStrategy;
-    long score;
+    unsigned long score;
+
+    bool ScanStrategyScores(std::vector<double>& iPool);
 
   public:
-    Player();
+    Player(bool prediction_ = true, unsigned selectedStrategy_ = 0, long score_ = 0);
 
-    //void ProcessInfo(long signal);
-    void ChooseStrategy();
-    bool Predict(long signal) const;
-    void UpdateScores();
+    void InitializePlayer(const long seed);
+    void ChooseStrategy(const long& randomSeed);
+    void Predict(const unsigned long& signal);
+    void UpdateScore(bool currentResult);
+    unsigned long GetScore() const;
+    bool GetPrediction() const;
     
   }; // Player
 
