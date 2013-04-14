@@ -10,6 +10,8 @@
 #include <bitset>
 #include <iostream>
 #include "Constants.h"
+#include "RandomDrand.h" // Random Number Generator
+//#include "ParkMiller.h" // Random Number Generator
 
 namespace EGT{
 
@@ -17,15 +19,14 @@ namespace EGT{
 
     std::bitset<SIZE> singleStrategy;
     unsigned long score;
-    //    long seed;
     
   public:
 
     Strategy(unsigned long score_ = 0);
 
-    void Initialize(const long& randomSeed);
+    void Initialize(const std::vector<double>& randoms);
     bool GetThisStrategyResult(const unsigned long& signal) const;
-    void UpdateScore();
+    void UpdateScore(const unsigned long& signal, const bool& currentResult);
     unsigned long GetScore() const;
 
   }; // Strategy

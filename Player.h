@@ -11,27 +11,34 @@
 #include <iostream>
 #include "Constants.h"
 #include "Strategy.h"
+#include "RandomDrand.h" // Random Number Generator
+//#include "ParkMiller.h" // Random Number Generator
 
 namespace EGT {
 
   class Player {
 
-    typedef typename EGT::Strategy StrategyType;
+    typedef EGT::Strategy StrategyType;
     std::vector<StrategyType> strategies;
+    typedef RandomDrand RNGType;
 
     bool prediction; // 1--A wins; 0--B wins
     unsigned selectedStrategy;
     unsigned long score;
+    //RNGType rng4Choose;
+    RNGType rng4Init;
 
     bool ScanStrategyScores(std::vector<double>& iPool);
 
   public:
     Player(bool prediction_ = true, unsigned selectedStrategy_ = 0, long score_ = 0);
 
-    void InitializePlayer(const long seed);
-    void ChooseStrategy(const long& randomSeed);
+    void InitializePlayer(const unsigned long& seed);
+    void ChooseStrategy(const std::vector<double>& randoms);
+    void ShowSelectedStrategy() const;
+    void ShowPrediction() const;
     void Predict(const unsigned long& signal);
-    void UpdateScore(bool currentResult);
+    void UpdateScore(const unsigned long& signal, const bool& currentResult);
     unsigned long GetScore() const;
     bool GetPrediction() const;
     

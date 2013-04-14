@@ -1,7 +1,6 @@
 #include "Engine.h"
-//#include "Constants.h"
 
-EGT::Engine::Engine(const EGT::Parameters& params) : nPlayer(params.nPlayer), stepMax(params.stepMAX), fout(params.outputFile.c_str()), rng(nPlayer, params.randomSeed[0]), players(nPlayer), market(params.initSignal)
+EGT::Engine::Engine(const EGT::Parameters& params) : nPlayer(params.nPlayer), stepMax(params.stepMAX), fout(params.outputFile.c_str()), rng(NUMSTRAT, params.randomSeed[0]), players(nPlayer), market(params.initSignal)
 {
 
 }
@@ -22,11 +21,12 @@ void EGT::Engine::Run()
 void EGT::Engine::Initialize()
 {
   std::cout<<"Engine.Initialize\n";
-  std::vector<double> randoms(nPlayer);
-  rng.GetUniforms(randoms);
+  std::vector<double> randoms(NUMSTRAT);
+
   for(unsigned long i=0; i<nPlayer; i++) {
+    rng.GetUniforms(randoms);
     //std::cout<<randoms[i]<<std::endl;
-    players[i].InitializePlayer(static_cast<long>(randoms[i]*12345678));
+    players[i].InitializePlayer(static_cast<unsigned long> (12345678*randoms[0]));
   }
   
 }
@@ -34,11 +34,11 @@ void EGT::Engine::Initialize()
 void EGT::Engine::PlayGames()
 { 
   std::cout<<"Engine.PlayGames\n";
-  std::vector<double> randSeeds(nPlayer);
+  std::vector<double> randoms(NUMSTRAT);
   for(unsigned long iStep=0; iStep<stepMax; iStep++) {
     for(unsigned long id=0; id<nPlayer; id++) {
-      rng.GetUniforms(randSeeds);
-      players[id].ChooseStrategy(static_cast<long>(randSeeds[id]*12345678));
+      rng.GetUniforms(randoms);
+      players[id].ChooseStrategy(randoms);
       players[id].Predict(market.GetSignal());
       gatherer.DumpOneResult(players[id].GetPrediction());
     }
@@ -48,9 +48,11 @@ void EGT::Engine::PlayGames()
     if(gatherer.GetNumPlayerDone() == nPlayer) currentResult = gatherer.Publish();
     else std::cout<<"ERROR: "<<gatherer.GetNumPlayerDone()<<" "<<nPlayer<<std::endl;
     //else throw std::runtime_error("EGT::Engine::PlayeGames gathering players information is not done!\n");
-    std::cout<<iStep<<" "<<currentResult<<std::endl;
+    //std::cout<<iStep<<" "<<currentResult<<std::endl;
     UpdateAllInfo(currentResult);
-    PrintProgress();
+    //players[100].ShowPrediction();
+    players[100].ShowSelectedStrategy();
+    //PrintProgress();
   }
   std::cout<<std::endl;
 }
@@ -61,7 +63,9 @@ void EGT::Engine::Finalize()
   StatsGathererEGT::GathererType results = gatherer.GetResultsSoFar();  
   if(stepMax == results.size() ) {
     fout<<"#ResultsHistory"<<std::endl;
-    fout<<results;
+    for(unsigned istep=0; istep<stepMax;istep++) {
+      fout<<istep<<" "<<results[istep].first<<" "<<results[istep].second<<std::endl;
+    }
   }
   else std::cout<<"Finalize Error!\n";
   //else throw std::runtime_error("EGT::Engine::Finalize() step is not done!");
@@ -70,10 +74,10 @@ void EGT::Engine::Finalize()
 
 void EGT::Engine::UpdateAllInfo(bool currentResult)
 {
-  market.UpdateSignal(currentResult);
   for(unsigned long id=0; id<nPlayer; id++) {
-    players[id].UpdateScore(currentResult);
+    players[id].UpdateScore(market.GetSignal(), currentResult);
   }
+  market.UpdateSignal(currentResult);
   gatherer.UpdateResults();
 }
 

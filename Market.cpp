@@ -12,7 +12,7 @@ void EGT::Market::UpdateSignal(bool getResult)
   currentResult = getResult;
   signal <<= 1;
 
-  if(signal == true) {
+  if(getResult == true) {
     signal.set(0);
     historyResult.first++;
   }

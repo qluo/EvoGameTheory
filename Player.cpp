@@ -1,19 +1,16 @@
 #include "Player.h"
-#include "ParkMiller.h" // Random Number Generator
 
-typedef RandomParkMiller RNGType;
-
-EGT::Player::Player(bool prediction_, unsigned selectedStrategy_, long score_) : prediction(prediction_), selectedStrategy(selectedStrategy_), score(score_)
+EGT::Player::Player(bool prediction_, unsigned selectedStrategy_, long score_) : prediction(prediction_), selectedStrategy(selectedStrategy_), score(score_), rng4Init(SIZE,0)
+										 // rng4Choose(NUMSTRAT,0),
 {
   strategies.resize(NUMSTRAT);
 }
 
-void EGT::Player::ChooseStrategy(const long& randomSeed)
+void EGT::Player::ChooseStrategy(const std::vector<double>& randoms)
 {
   std::vector<double> iPool(NUMSTRAT,0);
-  RNGType rng(NUMSTRAT, randomSeed);
-  std::vector<double> randoms(NUMSTRAT);
-  rng.GetUniforms(randoms);
+  if(randoms.size() != NUMSTRAT) std::cout<<"ERROR! EGT::Player::ChooseStrategy\n";
+  //rng4Choose.GetUniforms(randoms);
 
   bool flag = ScanStrategyScores(iPool);
   unsigned iStrat = static_cast<unsigned>(randoms[0]*NUMSTRAT);;
@@ -26,6 +23,7 @@ void EGT::Player::ChooseStrategy(const long& randomSeed)
   }
 
   selectedStrategy = iStrat;
+
   //return true;
 }
 
@@ -37,11 +35,11 @@ void EGT::Player::Predict(const unsigned long& signal)
   //else throw std::runtime_error ("ERROR: selectStrategy !!!");
 }
 
-void EGT::Player::UpdateScore(bool currentResult)
+void EGT::Player::UpdateScore(const unsigned long& signal, const bool& currentResult)
 {
-  if(currentResult == prediction) {
-    score++;
-    strategies[selectedStrategy].UpdateScore();
+  if(currentResult == prediction) score++;
+  for(unsigned i=0; i<NUMSTRAT; i++) {
+    strategies[i].UpdateScore(signal, currentResult);
   }
 }
 
@@ -55,17 +53,17 @@ bool EGT::Player::GetPrediction() const
   return prediction;
 }
 
-void EGT::Player::InitializePlayer(const long seed)
+void EGT::Player::InitializePlayer(const unsigned long& seed)
 {
-  
-  RNGType rng(NUMSTRAT, seed);
-  std::vector<double> randoms(NUMSTRAT);
-  rng.GetUniforms(randoms);
+  rng4Init.SetSeed(seed);
+  //  rng4Choose.SetSeed(seed2);
+  std::vector<double> randoms(SIZE);
 
   for(unsigned i=0; i<NUMSTRAT; i++) {
-    strategies[i].Initialize(static_cast<long> (12345678*randoms[i]));
+    rng4Init.GetUniforms(randoms);
+    strategies[i].Initialize(randoms); //static_cast<long> (12345678*randoms[i]));
   }
-  
+  //std::cout<<"test"<<std::endl;
 }
 
 bool EGT::Player::ScanStrategyScores(std::vector<double>& iPool)
@@ -90,4 +88,14 @@ bool EGT::Player::ScanStrategyScores(std::vector<double>& iPool)
   }
 			
   return flag;
+}
+
+void EGT::Player::ShowSelectedStrategy() const
+{
+  std::cout<<selectedStrategy;
+}
+
+void EGT::Player::ShowPrediction() const
+{
+  std::cout<<prediction;
 }

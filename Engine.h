@@ -13,15 +13,15 @@
 #include "Player.h"
 #include "Market.h"
 #include "StatsGathererEGT.h"
-#include "ParkMiller.h"
+//#include "ParkMiller.h"
+#include "RandomDrand.h"
 #include "MyUtils.h"
-
 
 namespace EGT {
 
   class Engine {
     
-    typedef RandomParkMiller RNGType;
+    typedef RandomDrand RNGType;
 
     //Parameters& parameters;
     unsigned long nPlayer;
