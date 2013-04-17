@@ -7,9 +7,8 @@
 #ifndef STRATEGY_H
 #define STRATEGY_H
 #include <vector>
-#include <bitset>
 #include <iostream>
-#include "Constants.h"
+#include "MyUtils.h"
 #include "RandomDrand.h" // Random Number Generator
 //#include "ParkMiller.h" // Random Number Generator
 
@@ -17,16 +16,17 @@ namespace EGT{
 
   class Strategy {
 
-    std::bitset<SIZE> singleStrategy;
+    std::vector<unsigned> singleStrategy;
+    unsigned long size;
     unsigned long score;
     
   public:
 
-    Strategy(unsigned long score_ = 0);
+    Strategy(unsigned long size_ = 0, unsigned long score_ = 0);
 
     void Initialize(const std::vector<double>& randoms);
-    bool GetThisStrategyResult(const unsigned long& signal) const;
-    void UpdateScore(const unsigned long& signal, const bool& currentResult);
+    unsigned GetThisStrategyResult(const unsigned long& signal) const;
+    void UpdateScore(const unsigned long& signal, const unsigned& currentResult);
     unsigned long GetScore() const;
 
   }; // Strategy

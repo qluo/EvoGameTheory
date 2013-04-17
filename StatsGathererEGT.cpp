@@ -1,6 +1,6 @@
 #include "StatsGathererEGT.h"
 
-EGT::StatsGathererEGT::StatsGathererEGT() : sums(0,0), stepDone(0)
+EGT::StatsGathererEGT::StatsGathererEGT(unsigned long stepDone_) : sums(0,0), stepDone(stepDone_)
 {
 
 }
