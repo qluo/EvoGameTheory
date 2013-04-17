@@ -4,6 +4,7 @@
 EGT::Engine::Engine(const EGT::Parameters& params, EGT::Market& market_, std::vector<EGT::Player>& players_, EGT::StatsGathererEGT& gatherer_) : players(players_), market(market_), gatherer(gatherer_), nPlayer(params.nPlayer), memSize(params.memSize), nStrategy(params.nStrategy), nPlayerTotal(0), nStrategyMax(0), stepMax(params.stepMAX), fout(params.outputFile.c_str()), rng(nStrategyMax, params.randomSeed[0])
 {
   for(unsigned iSize=0; iSize<nPlayer.size(); iSize++) nPlayerTotal += nPlayer[iSize];
+  myUtils::error_testing(nPlayerTotal==players.size(), "EGT::Engine::Engine()");
   nStrategyMax = *(std::max_element(nStrategy.begin(), nStrategy.end()));
   rng.ResetDimensionality(nStrategyMax);
   //std::cout<<nPlayerTotal<<" "<<nStrategyMax<<std::endl;

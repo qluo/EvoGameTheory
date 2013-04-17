@@ -6,12 +6,12 @@
  */
 
 #include "SimpleReader.h"
-//#include "Constants.h"
 #include "Parameters.h"
 #include "Engine.h"
 #include "Player.h"
 #include "Market.h"
 #include "StatsGathererEGT.h"
+#include "MyUtils.h"
 
 typedef EGT::Parameters ParamsType;
 typedef EGT::Engine EngineType;
@@ -33,11 +33,15 @@ int main(int argc,char *argv[])
   std::vector<PlayerType> players;
 
   // --- initialize players --- //
-  for(unsigned ip=0;ip<params.nPlayer[0];ip++) {
-    //    PlayerType tmpPlayer(params.nStrategy[0], params.memSize[0]);
-    players.push_back(*(new PlayerType(params.nStrategy[0], params.memSize[0])));
+  unsigned long totalPlayer = 0;
+  for(unsigned ik=0; ik<params.nPlayer.size(); ik++) {
+    for(unsigned ip=0;ip<params.nPlayer[ik];ip++) {
+      players.push_back(*(new PlayerType(params.nStrategy[ik], params.memSize[ik])));
+      totalPlayer++;
+    }
   }
-  
+  myUtils::error_testing((players.size()==totalPlayer), "ERROR! Total Number of Players");
+
   EngineType engine(params,market,players,gatherer);
   engine.Run();
 
