@@ -16,7 +16,7 @@ EGT::Player::Player()
 
 }
 
-void EGT::Player::InitializePlayer(const unsigned long& seed)
+void EGT::Player::InitializeStrategy(const unsigned long& seed)
 {
   rng4Init.SetSeed(seed);
   std::vector<double> randoms(sigSize);

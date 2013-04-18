@@ -37,7 +37,7 @@ namespace EGT {
     Player(unsigned numStrategy_, unsigned long memSize_, bool prediction_ = true, unsigned selectedStrategy_ = 0, long score_ = 0);
     Player();
 
-    void InitializePlayer(const unsigned long& seed);
+    void InitializeStrategy(const unsigned long& seed);
     void ChooseStrategy(const std::vector<double>& randoms);
     void ShowSelectedStrategy() const;
     void ShowPrediction() const;

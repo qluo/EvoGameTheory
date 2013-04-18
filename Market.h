@@ -20,7 +20,7 @@ namespace EGT {
 
   class Market {
 
-    enum {MEMMAX=100};
+    enum {MEMMAX=20};
 
     std::string signalStart;
     std::bitset<MEMMAX> signal;

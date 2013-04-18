@@ -1,9 +1,8 @@
 #include "Market.h"
-//#include "MyUtils.h"
 
 EGT::Market::Market(const std::string& signalStart_) : signalStart(signalStart_), signal(signalStart), currentResult(true), historyResult(0,0)
 {
-  //  InitSignal();
+
 }
 
 void EGT::Market::UpdateSignal(unsigned getResult)
@@ -32,14 +31,10 @@ unsigned long EGT::Market::GetSignal(unsigned memsize) const
 {
   myUtils::error_testing((memsize<MEMMAX), "EGT::Market::GetSignal()");
   unsigned long tmpSignal=0;
-  //std::cout<<tmpSignal<<std::endl;
   for(unsigned ibit=memsize; ibit>0; ibit--) {
-    //    std::cout<<"ibit= "<<ibit<<" signal= "<<signal[ibit-1]<<std::endl;
     tmpSignal = 2*tmpSignal + signal[ibit-1];
   }
-  //std::cout<<tmpSignal<<std::endl;
   return tmpSignal;
-  //  return static_cast<unsigned long> (signal.to_ulong());
 }
 
 unsigned EGT::Market::GetMaxMemSize() const
