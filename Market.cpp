@@ -1,5 +1,12 @@
 #include "Market.h"
 
+EGT::Market& EGT::Market::Instance(const std::string& signal_)
+{
+  static Market theMarket(signal_);
+  return theMarket;
+}
+
+
 EGT::Market::Market(const std::string& signalStart_) : signalStart(signalStart_), signal(signalStart), currentResult(true), historyResult(0,0)
 {
 

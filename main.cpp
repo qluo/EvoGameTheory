@@ -27,7 +27,7 @@ int main(int argc,char *argv[])
   std::cout<<"Loading"<<std::endl;
   reader.load(params);
 
-  MarketType market(params.initSignal);
+  MarketType& market = MarketType::Instance(params.initSignal);
   GathererType gatherer(0);
   
   std::vector<PlayerType> players;
