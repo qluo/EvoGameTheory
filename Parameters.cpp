@@ -4,6 +4,8 @@ EGT::Parameters& EGT::operator <= (EGT::Parameters& parameters,  Dmrg::SimpleRea
 {
   reader.read(parameters.outputFile);
   reader.read(parameters.nPlayer);
+  reader.read(parameters.memSize);
+  reader.read(parameters.nStrategy);
   reader.read(parameters.stepMAX);
   reader.read(parameters.initSignal);
   reader.read(parameters.randomSeed);
@@ -15,6 +17,8 @@ std::ostream& EGT::operator << (std::ostream &os, const EGT::Parameters &paramet
 {
   os<<"parameters.filename="<<parameters.outputFile<<"\n";
   os<<"parameters.nPlayer="<<parameters.nPlayer<<"\n";
+  os<<"parameters.memSize="<<parameters.memSize<<"\n";
+  os<<"parameters.nStrategy="<<parameters.nStrategy<<"\n";
   os<<"parameters.stepMAX="<<parameters.stepMAX<<"\n";
   os<<"parameters.initSingal="<<parameters.initSignal<<"\n";
   os<<"parameters.seed="<<parameters.randomSeed;

@@ -8,7 +8,7 @@
 #define ENGINE_H
 
 #include <fstream>
-//#include <iostream>
+#include <vector>
 #include "Parameters.h"
 #include "Player.h"
 #include "Market.h"
@@ -23,15 +23,19 @@ namespace EGT {
     
     typedef RandomDrand RNGType;
 
-    //Parameters& parameters;
-    unsigned long nPlayer;
+    std::vector<EGT::Player>& players;
+    Market& market;
+    StatsGathererEGT& gatherer;
+
+    std::vector<unsigned long> nPlayer;
+    std::vector<unsigned> memSize;
+    std::vector<unsigned> nStrategy;
+    
+    unsigned long nPlayerTotal;
+    unsigned nStrategyMax;
     unsigned long stepMax;
     std::ofstream fout;
     RNGType rng;
-
-    std::vector<EGT::Player> players;
-    Market market;
-    StatsGathererEGT gatherer;
     
     void WriteHeader();
     void WriteFooter();
@@ -40,7 +44,7 @@ namespace EGT {
 
   public:
 
-    Engine(const Parameters& params);
+    Engine(const EGT::Parameters& params, EGT::Market& market_, std::vector<EGT::Player>& players_, EGT::StatsGathererEGT& gatherer_);
 
     void Run();
     void Initialize();

@@ -13,7 +13,7 @@ namespace EGT {
     typedef std::pair<unsigned long, unsigned long> PairType;
     typedef std::vector< PairType > GathererType;
 
-    StatsGathererEGT();
+    StatsGathererEGT(unsigned long stepDone_ = 0);
     void DumpOneResult(bool result);
     void UpdateResults();
     GathererType GetResultsSoFar() const;

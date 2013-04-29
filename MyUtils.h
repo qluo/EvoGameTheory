@@ -6,7 +6,8 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-//#include <bitset>
+#include <string>
+#include <stdlib.h>
 #include <sys/time.h>
 #include <sys/resource.h>
 
@@ -37,17 +38,16 @@ namespace std {
 
 namespace myUtils {
 
-  /*
-  template<typename DataType>
-  void Dec2Bin(DataType dec, std::bitset<>& bin, unsigned size)
+  // For error testing
+  inline void error_testing(bool cond, const std::string& msg = "testing failed")
   {
-    bin.reset();
-    std::bitset<size> bin_tmp(dec);
-    bin = bin_tmp;
-  }  
-  */
-
+    if(!cond) {
+      std::cerr<<msg<<std::endl;
+      exit(1);
+    }
+  }
 
 } // namespace myUtils
+
 
 #endif

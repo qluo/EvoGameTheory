@@ -2,33 +2,33 @@
 
 typedef RandomDrand RNGType;
 
-EGT::Strategy::Strategy(unsigned long score_) : score(score_)
+EGT::Strategy::Strategy(unsigned long size_, unsigned long score_) : size(size_), score(score_)
 {
-  //Initialize();
+  singleStrategy.resize(size);
 }
 
 void EGT::Strategy::Initialize(const std::vector<double>& randoms)
 {
-  //  RNGType rng(SIZE, randomSeed);
-  if(randoms.size() != SIZE) std::cout<<"ERROR!  EGT::Strategy::Initialize\n";
-  //std::vector<double> randoms(SIZE);
-  
-  //rng.GetUniforms(randoms);
-  for(unsigned ibit=0; ibit<SIZE; ibit++) {
-    if(randoms[ibit]<0.5) singleStrategy.set(ibit);
-    else singleStrategy.reset(ibit);
+  myUtils::error_testing((randoms.size()==size), "ERROR! EGT::Strategy::Initialize()");
+
+  for(unsigned ibit=0; ibit<size; ibit++) {
+    if(randoms[ibit]<=0.5) singleStrategy[ibit]=1;
+    else singleStrategy[ibit]=0;
   }
   
 }
 
-bool EGT::Strategy::GetThisStrategyResult(const unsigned long& signal) const
+unsigned EGT::Strategy::GetThisStrategyResult(const unsigned long& signal) const
 {
+  myUtils::error_testing((signal<size), "ERROR! EGT::Strategy::GetThisStrategyResult()");
+
   if(singleStrategy[signal] == 1) return true;
   else return false;
 }
 
-void EGT::Strategy::UpdateScore(const unsigned long& signal, const bool& currentResult)
+void EGT::Strategy::UpdateScore(const unsigned long& signal, const unsigned& currentResult)
 {
+  myUtils::error_testing( (signal < size) && (currentResult<2), "ERROR: EGT::Strategy::UpdateScore()");
   if(singleStrategy[signal] == currentResult) score++;
 }
 
