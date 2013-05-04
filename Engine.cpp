@@ -1,10 +1,10 @@
 #include "Engine.h"
 #include <algorithm>
 
-EGT::Engine::Engine(const EGT::Parameters& params, EGT::Market& market_, std::vector<EGT::Player>& players_, EGT::StatsGathererEGT& gatherer_) : players(players_), market(market_), gatherer(gatherer_), nPlayer(params.nPlayer), memSize(params.memSize), nStrategy(params.nStrategy), nPlayerTotal(0), nStrategyMax(0), stepMax(params.stepMAX), fout(params.outputFile.c_str()), rng(nStrategyMax, params.randomSeed[0])
+EGT::Engine::Engine(const EGT::Parameters& params, EGT::Market& market_, std::vector<EGT::PlayerBase*>& playerPtr_, EGT::StatsGathererEGT& gatherer_) : playerPtr(playerPtr_), market(market_), gatherer(gatherer_), nPlayer(params.nPlayer), memSize(params.memSize), nStrategy(params.nStrategy), nPlayerTotal(0), nStrategyMax(0), stepMax(params.stepMAX), fout(params.outputFile.c_str()), rng(nStrategyMax, params.randomSeed[0])
 {
   for(unsigned iSize=0; iSize<nPlayer.size(); iSize++) nPlayerTotal += nPlayer[iSize];
-  myUtils::error_testing(nPlayerTotal==players.size(), "EGT::Engine::Engine()");
+  myUtils::check(nPlayerTotal==playerPtr.size(), "EGT::Engine::Engine()");
   nStrategyMax = *(std::max_element(nStrategy.begin(), nStrategy.end()));
   rng.ResetDimensionality(nStrategyMax);
 }
@@ -28,7 +28,7 @@ void EGT::Engine::Initialize()
 
   for(unsigned long i=0; i<nPlayerTotal; i++) {
     rng.GetUniforms(randoms);
-    players[i].InitializeStrategy(static_cast<unsigned long> (12345678*randoms[0]));
+    playerPtr[i]->InitializeStrat(static_cast<unsigned long> (12345678*randoms[0]));
   }
   
 }
@@ -40,20 +40,19 @@ void EGT::Engine::PlayGames()
   for(unsigned long iStep=0; iStep<stepMax; iStep++) {
     for(unsigned long id=0; id<nPlayerTotal; id++) {
       rng.GetUniforms(randoms);
-      players[id].ChooseStrategy(randoms);
-      unsigned playerMemSize = players[id].GetMemSize();
-      players[id].Predict(market.GetSignal(playerMemSize));
-      gatherer.DumpOneResult(players[id].GetPrediction());
+      playerPtr[id]->ChooseStrat(randoms);
+      unsigned playerMemSize = playerPtr[id]->GetMemSize();
+      playerPtr[id]->Predict(market.GetSignal(playerMemSize));
+      gatherer.DumpOneResult(playerPtr[id]->GetPrediction());
     }
 
     bool currentResult = true;
 
-    if(gatherer.GetNumPlayerDone() == nPlayerTotal) currentResult = gatherer.Publish();
-    else std::cout<<"ERROR: "<<gatherer.GetNumPlayerDone()<<" "<<nPlayerTotal<<std::endl;
-    //else throw std::runtime_error("EGT::Engine::PlayeGames gathering players information is not done!\n");
+    myUtils::check(gatherer.GetNumPlayerDone() == nPlayerTotal, "ERROR: Engine::PlayGames: gatherer.GetNumPlayerDone() != nPlayerTotal");
+    currentResult = gatherer.Publish();
     UpdateAllInfo(currentResult);
     PrintProgress();
-    market.ShowSignal();
+    //    market.ShowSignal();
   }
   std::cout<<std::endl;
 }
@@ -62,7 +61,7 @@ void EGT::Engine::Finalize()
 {
   std::cout<<"Engine.Finalize"<<std::endl;
   StatsGathererEGT::GathererType results = gatherer.GetResultsSoFar();  
-  myUtils::error_testing((stepMax == results.size()), "ERROR! EGT::Engine::Finalize()"); 
+  myUtils::check(stepMax == results.size(), "ERROR! EGT::Engine::Finalize()"); 
   // ------ output 1 ------ //
   fout<<"#ResultsHistory"<<std::endl;
   for(unsigned istep=0; istep<stepMax;istep++) {
@@ -70,8 +69,8 @@ void EGT::Engine::Finalize()
   }
   // ------ output 2 ------ //
   fout<<"#MemSizeVSScores"<<std::endl;
-  for(unsigned id=0; id<players.size(); id++) {
-    fout<<players[id].GetMemSize()<<" "<<players[id].GetScore()<<std::endl;
+  for(unsigned id=0; id<playerPtr.size(); id++) {
+    fout<<playerPtr[id]->GetMemSize()<<" "<<playerPtr[id]->GetScore()<<std::endl;
   }
   // ----- to be implemented ---------- //
 }
@@ -79,8 +78,8 @@ void EGT::Engine::Finalize()
 void EGT::Engine::UpdateAllInfo(bool currentResult)
 {
   for(unsigned long id=0; id<nPlayerTotal; id++) {
-    unsigned playerMemSize = players[id].GetMemSize();
-    players[id].UpdateScore(market.GetSignal(playerMemSize), currentResult);
+    unsigned playerMemSize = playerPtr[id]->GetMemSize();
+    playerPtr[id]->UpdateScore(market.GetSignal(playerMemSize), currentResult);
   }
   market.UpdateSignal(currentResult);
   gatherer.UpdateResults();

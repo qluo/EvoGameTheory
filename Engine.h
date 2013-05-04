@@ -10,7 +10,7 @@
 #include <fstream>
 #include <vector>
 #include "Parameters.h"
-#include "Player.h"
+#include "PlayerBase.h"
 #include "Market.h"
 #include "StatsGathererEGT.h"
 //#include "ParkMiller.h"
@@ -23,7 +23,7 @@ namespace EGT {
     
     typedef RandomDrand RNGType;
 
-    std::vector<EGT::Player>& players;
+    std::vector<EGT::PlayerBase*>& playerPtr;
     Market& market;
     StatsGathererEGT& gatherer;
 
@@ -44,7 +44,7 @@ namespace EGT {
 
   public:
 
-    Engine(const EGT::Parameters& params, EGT::Market& market_, std::vector<EGT::Player>& players_, EGT::StatsGathererEGT& gatherer_);
+    Engine(const EGT::Parameters& params, EGT::Market& market_, std::vector<EGT::PlayerBase*>& playerPtr_, EGT::StatsGathererEGT& gatherer_);
 
     void Run();
     void Initialize();

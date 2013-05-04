@@ -39,7 +39,7 @@ namespace std {
 namespace myUtils {
 
   // For error testing
-  inline void error_testing(bool cond, const std::string& msg = "testing failed")
+  inline void check(bool cond, const std::string& msg = "testing failed")
   {
     if(!cond) {
       std::cerr<<msg<<std::endl;

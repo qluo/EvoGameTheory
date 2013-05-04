@@ -9,7 +9,7 @@ EGT::Strategy::Strategy(unsigned long size_, unsigned long score_) : size(size_)
 
 void EGT::Strategy::Initialize(const std::vector<double>& randoms)
 {
-  myUtils::error_testing((randoms.size()==size), "ERROR! EGT::Strategy::Initialize()");
+  myUtils::check((randoms.size()==size), "ERROR! EGT::Strategy::Initialize()");
 
   for(unsigned ibit=0; ibit<size; ibit++) {
     if(randoms[ibit]<=0.5) singleStrategy[ibit]=1;
@@ -20,7 +20,7 @@ void EGT::Strategy::Initialize(const std::vector<double>& randoms)
 
 unsigned EGT::Strategy::GetThisStrategyResult(const unsigned long& signal) const
 {
-  myUtils::error_testing((signal<size), "ERROR! EGT::Strategy::GetThisStrategyResult()");
+  myUtils::check((signal<size), "ERROR! EGT::Strategy::GetThisStrategyResult()");
 
   if(singleStrategy[signal] == 1) return true;
   else return false;
@@ -28,7 +28,7 @@ unsigned EGT::Strategy::GetThisStrategyResult(const unsigned long& signal) const
 
 void EGT::Strategy::UpdateScore(const unsigned long& signal, const unsigned& currentResult)
 {
-  myUtils::error_testing( (signal < size) && (currentResult<2), "ERROR: EGT::Strategy::UpdateScore()");
+  myUtils::check( (signal < size) && (currentResult<2), "ERROR: EGT::Strategy::UpdateScore()");
   if(singleStrategy[signal] == currentResult) score++;
 }
 

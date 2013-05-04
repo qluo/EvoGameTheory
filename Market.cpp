@@ -14,7 +14,7 @@ EGT::Market::Market(const std::string& signalStart_) : signalStart(signalStart_)
 
 void EGT::Market::UpdateSignal(unsigned getResult)
 {
-  myUtils::error_testing((getResult<2), "ERROR! EGT::Market::UpdateSignal()");
+  myUtils::check((getResult<2), "ERROR! EGT::Market::UpdateSignal()");
   currentResult = getResult;
   signal <<= 1;
 
@@ -36,7 +36,7 @@ void EGT::Market::ResetSignal()
 
 unsigned long EGT::Market::GetSignal(unsigned memsize) const
 {
-  myUtils::error_testing((memsize<MEMMAX), "EGT::Market::GetSignal()");
+  myUtils::check((memsize<MEMMAX), "EGT::Market::GetSignal()");
   unsigned long tmpSignal=0;
   for(unsigned ibit=memsize; ibit>0; ibit--) {
     tmpSignal = 2*tmpSignal + signal[ibit-1];
