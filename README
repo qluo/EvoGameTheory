@@ -12,7 +12,7 @@ Model: Physica A 246 (1997) 407-418
 Objets:
 
 Market		-- Singleton
-Players		-- Factory
+Players		-- Factory Method
 StatsGatherer	
 
 //----------------------------------//
