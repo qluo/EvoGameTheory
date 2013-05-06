@@ -13,15 +13,16 @@
 #include "PlayerBase.h"
 #include "Market.h"
 #include "StatsGathererEGT.h"
+#include "RandomNumRec.h"
 //#include "ParkMiller.h"
-#include "RandomDrand.h"
+//#include "RandomDrand.h"
 #include "MyUtils.h"
 
 namespace EGT {
 
   class Engine {
     
-    typedef RandomDrand RNGType;
+    typedef RandomNumRec RNGType;
     typedef std::vector<EGT::PlayerBase*>::iterator IterPlayer;
 
     std::vector<EGT::PlayerBase*>& playerPtr;

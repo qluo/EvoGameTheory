@@ -1,7 +1,5 @@
 #include "Strategy.h"
 
-typedef RandomDrand RNGType;
-
 EGT::Strategy::Strategy(unsigned long size_, unsigned long score_) : size(size_), score(score_)
 {
   singleStrategy.resize(size);

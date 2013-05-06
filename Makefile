@@ -4,7 +4,7 @@ LDFLAGS = -L.
 EXENAME = egt
 #CPPFLAGS = -DNDEBUG 
 CXX = g++ -Werror -Wall -g3 -O3
-OBJ = main.o Engine.o Market.o Normals.o Parameters.o RandomDrand.o RandomBase.o StatsGathererEGT.o Strategy.o PlayerNormal.o PlayerFactory.o 
+OBJ = main.o Engine.o Market.o Normals.o Parameters.o RandomNumRec.o RandomBase.o StatsGathererEGT.o Strategy.o PlayerNormal.o PlayerFactory.o 
 #PlayerFactoryInitializer.o
 
 $(EXENAME): $(OBJ)
@@ -22,19 +22,17 @@ Parameters.o : MyUtils.h SimpleReader.h
 
 RandomDrand.o : RandomBase.h
 
+RandomNumRec.o : RandomBase.h
+
 RandomBase.o : Normals.h
 
 StatsGathererEGT.o : 
 
 Strategy.o : RandomDrand.h
 
-#PlayerBase.o : 
-
 PlayerNormal.o : PlayerBase.h Strategy.h RandomDrand.h PlayerFactory.h 
 
 PlayerFactory.o : PlayerBase.h
-
-#PlayerFactoryInitializer.o : PlayerFactory.h PlayerNormal.h
 
 clean:
 	rm -f core* *.o *.ii *.tt *~

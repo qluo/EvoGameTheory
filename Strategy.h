@@ -9,13 +9,15 @@
 #include <vector>
 #include <iostream>
 #include "MyUtils.h"
-#include "RandomDrand.h" // Random Number Generator
+//#include "RandomNumRec.h"
+//#include "RandomDrand.h" // Random Number Generator
 //#include "ParkMiller.h" // Random Number Generator
 
 namespace EGT{
 
   class Strategy {
 
+    //typedef RandomNumRec RNGType;
     std::vector<unsigned> singleStrategy;
     unsigned long size;
     unsigned long score;
