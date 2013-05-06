@@ -6,6 +6,7 @@ EGT::Engine::Engine(const EGT::Parameters& params, EGT::Market& market_, std::ve
   for(unsigned iSize=0; iSize<nPlayer.size(); iSize++) nPlayerTotal += nPlayer[iSize];
   myUtils::check(nPlayerTotal==playerPtr.size(), "EGT::Engine::Engine()");
   nStrategyMax = *(std::max_element(nStrategy.begin(), nStrategy.end()));
+  //std::cout<<nStrategyMax<<std::endl;
   rng.ResetDimensionality(nStrategyMax);
 }
 
@@ -26,9 +27,11 @@ void EGT::Engine::Initialize()
   std::cout<<"Engine.Initialize"<<std::endl;
   std::vector<double> randoms(nStrategyMax);
 
-  for(unsigned long i=0; i<nPlayerTotal; i++) {
+  for(IterPlayer it=playerPtr.begin();it!=playerPtr.end();it++) {
+    //  for(unsigned long i=0; i<nPlayerTotal; i++) {
     rng.GetUniforms(randoms);
-    playerPtr[i]->InitializeStrat(static_cast<unsigned long> (12345678*randoms[0]));
+    (*it)->InitializeStrat(static_cast<unsigned long> (12345678*randoms[0]));
+    //    playerPtr[i]->InitializeStrat(static_cast<unsigned long> (12345678*randoms[0]));
   }
   
 }
@@ -38,12 +41,17 @@ void EGT::Engine::PlayGames()
   std::cout<<"Engine.PlayGames"<<std::endl;
   std::vector<double> randoms(nStrategyMax);
   for(unsigned long iStep=0; iStep<stepMax; iStep++) {
-    for(unsigned long id=0; id<nPlayerTotal; id++) {
+    for(IterPlayer it=playerPtr.begin();it!=playerPtr.end();it++) {
+    //    for(unsigned long id=0; id<nPlayerTotal; id++) {
       rng.GetUniforms(randoms);
-      playerPtr[id]->ChooseStrat(randoms);
-      unsigned playerMemSize = playerPtr[id]->GetMemSize();
-      playerPtr[id]->Predict(market.GetSignal(playerMemSize));
-      gatherer.DumpOneResult(playerPtr[id]->GetPrediction());
+      (*it)->ChooseStrat(randoms);
+      unsigned playerMemSize = (*it)->GetMemSize();
+      (*it)->Predict(market.GetSignal(playerMemSize));
+      gatherer.DumpOneResult((*it)->GetPrediction());
+      //      playerPtr[id]->ChooseStrat(randoms);
+      //      unsigned playerMemSize = playerPtr[id]->GetMemSize();
+      //      playerPtr[id]->Predict(market.GetSignal(playerMemSize));
+      //      gatherer.DumpOneResult(playerPtr[id]->GetPrediction());
     }
 
     bool currentResult = true;
@@ -69,17 +77,22 @@ void EGT::Engine::Finalize()
   }
   // ------ output 2 ------ //
   fout<<"#MemSizeVSScores"<<std::endl;
-  for(unsigned id=0; id<playerPtr.size(); id++) {
-    fout<<playerPtr[id]->GetMemSize()<<" "<<playerPtr[id]->GetScore()<<std::endl;
+  for(IterPlayer it=playerPtr.begin();it!=playerPtr.end();it++) {
+    fout<<(*it)->GetMemSize()<<" "<<(*it)->GetScore()<<std::endl;
+  //  for(unsigned id=0; id<playerPtr.size(); id++) {
+    //    fout<<playerPtr[id]->GetMemSize()<<" "<<playerPtr[id]->GetScore()<<std::endl;
   }
   // ----- to be implemented ---------- //
 }
 
 void EGT::Engine::UpdateAllInfo(bool currentResult)
 {
-  for(unsigned long id=0; id<nPlayerTotal; id++) {
-    unsigned playerMemSize = playerPtr[id]->GetMemSize();
-    playerPtr[id]->UpdateScore(market.GetSignal(playerMemSize), currentResult);
+  for(IterPlayer it=playerPtr.begin();it!=playerPtr.end();it++) {
+  //  for(unsigned long id=0; id<nPlayerTotal; id++) {
+    unsigned playerMemSize = (*it)->GetMemSize();
+    (*it)->UpdateScore(market.GetSignal(playerMemSize), currentResult);
+    //unsigned playerMemSize = playerPtr[id]->GetMemSize();
+    //playerPtr[id]->UpdateScore(market.GetSignal(playerMemSize), currentResult);
   }
   market.UpdateSignal(currentResult);
   gatherer.UpdateResults();

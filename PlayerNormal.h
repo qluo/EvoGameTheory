@@ -9,7 +9,6 @@
 
 #include "PlayerBase.h"
 #include "PlayerFactory.h"
-//#include "PlayerFactoryInitializer.h"
 #include "Strategy.h"
 #include "RandomDrand.h" // Random Number Generator
 //#include "ParkMiller.h" // Random Number Generator
@@ -20,6 +19,8 @@ namespace EGT {
   class PlayerNormal : public PlayerBase {
   public:
     typedef EGT::Strategy StratType;
+    typedef std::vector<StratType>::iterator IterStrat;
+    typedef std::vector<StratType>::const_iterator IterConstStrat;
     typedef RandomDrand RNGType;
 
     PlayerNormal(unsigned numStrat_, unsigned long memSize_, bool prediction_ = true, unsigned selectedStrat_ = 0, long score_ = 0);

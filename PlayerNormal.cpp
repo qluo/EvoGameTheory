@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <math.h>
+#include <algorithm>
 
 EGT::PlayerNormal::PlayerNormal(unsigned numStrat_, unsigned long memSize_, bool prediction_, unsigned selectedStrat_, long score_)
   : numStrat(numStrat_), memSize(memSize_), sigSize(pow(2,memSize)), prediction(prediction_), selectedStrat(selectedStrat_), score(score_), rng4Init(sigSize,0)
@@ -24,9 +25,9 @@ void EGT::PlayerNormal::InitializeStrat(const unsigned long& seed)
   rng4Init.SetSeed(seed);
   std::vector<double> randoms(sigSize);
 
-  for(unsigned i=0; i<numStrat; i++) {
+  for(IterStrat its=strats.begin(); its!=strats.end(); its++) {
     rng4Init.GetUniforms(randoms);
-    strats[i].Initialize(randoms); //static_cast<long> (12345678*randoms[i]));
+    its->Initialize(randoms);
   }
 }
 
@@ -56,8 +57,8 @@ void EGT::PlayerNormal::Predict(const unsigned long& signal)
 void EGT::PlayerNormal::UpdateScore(const unsigned long& signal, const unsigned& currentResult)
 {
   if(currentResult == prediction) score++;
-  for(unsigned i=0; i<numStrat; i++) {
-    strats[i].UpdateScore(signal, currentResult);
+  for(IterStrat its=strats.begin(); its!=strats.end(); its++) {
+    its->UpdateScore(signal, currentResult);
   }
 }
 
@@ -73,23 +74,18 @@ unsigned EGT::PlayerNormal::GetPrediction() const
 
 bool EGT::PlayerNormal::ScanStratScores(std::vector<double>& iPool) const
 {
-  myUtils::check((iPool.size()==numStrat), "ERROR! EGT::Player::ScanStratScores");
-  std::vector<unsigned long> stratScores(numStrat);
-  for(unsigned i=0; i<numStrat; i++) stratScores[i]=strats[i].GetScore();
-  
   bool flag=false;
-  unsigned iHigh = 0;
-  for(unsigned i=0; i<numStrat; i++) {
-    if(stratScores[i]>stratScores[iHigh]) iHigh = i;
-  }
-  unsigned long highScore = stratScores[iHigh];
+  myUtils::check((iPool.size()==numStrat), "ERROR! EGT::Player::ScanStratScores");
+
+  IterConstStrat itsHigh = std::max_element(strats.begin(), strats.end());
+  unsigned long highScore = (*itsHigh).GetScore();
   
   for(unsigned i=0; i<numStrat; i++) {
-    if(stratScores[i] == highScore) {
+    if(strats[i].GetScore() == highScore) {
       iPool[i] = 1;
       flag = true;
     }
-    else if (stratScores[i] < highScore) iPool[i] = 0;
+    else if (strats[i].GetScore() < highScore) iPool[i] = 0;
   }
 			
   return flag;

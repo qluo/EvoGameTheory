@@ -22,6 +22,7 @@ namespace EGT {
   class Engine {
     
     typedef RandomDrand RNGType;
+    typedef std::vector<EGT::PlayerBase*>::iterator IterPlayer;
 
     std::vector<EGT::PlayerBase*>& playerPtr;
     Market& market;

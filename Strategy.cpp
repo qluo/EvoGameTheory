@@ -36,3 +36,9 @@ unsigned long EGT::Strategy::GetScore() const
 {
   return score;
 }
+
+bool EGT::operator < (const EGT::Strategy& left, const EGT::Strategy& right)
+{
+  if(left.score<right.score) return true;
+  else return false;
+}

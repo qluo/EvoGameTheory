@@ -29,7 +29,10 @@ namespace EGT{
     void UpdateScore(const unsigned long& signal, const unsigned& currentResult);
     unsigned long GetScore() const;
 
+    friend bool operator < (const Strategy& left, const Strategy& right);
   }; // Strategy
+
+  bool operator < (const Strategy& left, const Strategy& right);
 
 } // namespace EGT
 
